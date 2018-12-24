@@ -14,6 +14,8 @@ AvgBCG<- BCG %>%
 
 AvgBCG<- merge(AvgBCG,sites,by.x="STA_SEQ")
 
+uniqsites<-as.data.frame(unique(AvgBCG$sites))
+
 #Make sure coordinates are numeric.  Create a SpatialPointsDataFrame
 AvgBCG$YLat  <- as.numeric(AvgBCG$YLat)
 AvgBCG$XLong  <- as.numeric(AvgBCG$XLong)
