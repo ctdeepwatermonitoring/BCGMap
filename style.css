@@ -3,9 +3,21 @@ html {
     width: 100%;
     overflow: hidden;
 }
+
 body {
     height: 100%;
     width: 100%;
+    background-color: #F1F1F1;
+}
+
+h3 {
+    text-align: left;
+    color: black;
+    margin: 0;
+}
+
+p {
+    margin: 0;
 }
 
 #map {

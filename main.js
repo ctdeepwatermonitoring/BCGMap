@@ -13,14 +13,12 @@ map.createPane('top');
 map.getPane('top').style.zIndex=650;
 
 // load a tile layer base map
-L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
     maxZoom: 18,
-    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, ' +
-        'Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, ' +
-        'Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-L.control.attribution({position: 'bottomright'}).addTo(map);
+L.control.attribution({position: 'topright'}).addTo(map);
 
 //in pixels, top left icon is drawn on lat,long
 var FishIcon = L.Icon.extend({
@@ -115,15 +113,8 @@ var controlLayers = L.control.layers().addTo(map);
 $.getJSON("data/FishBCGsites.geojson",function(fishdata){
     var fishmarker = L.geoJson(fishdata ,{
         pointToLayer: function(feature,latlng){
-            return L.marker (latlng,{icon: getFishIcon(feature),opacity: 0.8})
+            return L.marker (latlng,{icon: getFishIcon(feature),opacity: 0.9})
         },
-        onEachFeature: function (feature,marker) {
-            marker.bindPopup('<b>Stream: </b>' + feature.properties.Station_Name + '</br>' +
-                "<b>SID: </b>" + feature.properties.STA_SEQ + '</br>' +
-                "<b>SAMPLE: </b>Fish"+'</br>'+
-                "<b>BCG: </b>" +
-                feature.properties.AvgBCG);
-        }
     }).addTo(map);
     controlLayers.addOverlay(fishmarker,'Fish');
 });
@@ -132,23 +123,22 @@ $.getJSON("data/FishBCGsites.geojson",function(fishdata){
 $.getJSON("data/BugBCGsites.geojson",function(bugdata){
     var bugmarker = L.geoJson(bugdata ,{
         pointToLayer: function(feature,latlng){
-            return L.marker (latlng,{icon: getBugIcon(feature),opacity: 0.8})
+            return L.marker (latlng,{icon: getBugIcon(feature),opacity: 0.9})
         },
-        onEachFeature: function (feature,marker) {
-            marker.bindPopup('<b>Stream: </b>' + feature.properties.Station_Name + '</br>' +
-                "<b>SID: </b>" + feature.properties.STA_SEQ + '</br>' +
-                "<b>SAMPLE: </b>Bug"+'</br>'+
-                "<b>BCG: </b>" +
-                feature.properties.AvgBCG);
-        }
     }).addTo(map);
     controlLayers.addOverlay(bugmarker,'Bug');
 });
 
-$.getJSON("data/BCGsites.geojson",function(data) {
+$.getJSON("data/FBBCGsites.geojson",function(data) {
     var marker = L.geoJson(data, {
         pointToLayer: function (feature, latlng) {
-            return L.marker(latlng, {icon: siteIcon, opacity: 1})
+            return L.marker(latlng, {pane: 'top', icon: siteIcon, opacity: 1})
+        },
+        onEachFeature: function (feature,marker) {
+            marker.bindPopup('<b>Stream: </b>' + feature.properties.Station_Name + '</br>' +
+                "<b>SID: </b>" + feature.properties.STA_SEQ + '</br>' +
+                "<b>Bug BCG: </b>" + feature.properties.BugBCG + '</br>' +
+                "<b>Fish BCG: </b>" + feature.properties.FishBCG + '</br>');
         }
     }).addTo(map);
 });

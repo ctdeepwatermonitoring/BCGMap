@@ -14,8 +14,6 @@ AvgBCG<- BCG %>%
 
 AvgBCG<- merge(AvgBCG,sites,by.x="STA_SEQ")
 
-uniqsites<-as.data.frame(unique(AvgBCG$sites))
-
 #Make sure coordinates are numeric.  Create a SpatialPointsDataFrame
 AvgBCG$YLat  <- as.numeric(AvgBCG$YLat)
 AvgBCG$XLong  <- as.numeric(AvgBCG$XLong)
@@ -69,3 +67,27 @@ proj4string(AvgFishBCG.SP) <- CRS("+proj=utm +zone=18 +datum=WGS84")
 str(AvgFishBCG.SP) # Now is class SpatialPointsDataFrame
 #Write as geojson
 writeOGR(AvgFishBCG.SP,"FishBCGsites",layer="AvgFishBCG", driver='GeoJSON')
+
+
+#####BUG/FISH Per Site#####################################
+##################################################
+BugBCG<-BCG[BCG$SAMPLE=='BUG',]
+
+AvgBugBCG<- BugBCG %>%
+  group_by(STA_SEQ) %>%
+  summarise(AvgBCG=mean(METRIC_VALUE))%>%
+  as.data.frame()
+
+colnames(AvgBugBCG)[2]<-"BugBCG"
+
+FishBCG<-BCG[BCG$SAMPLE=='FISH',]
+
+AvgFishBCG<- FishBCG %>%
+  group_by(STA_SEQ) %>%
+  summarise(AvgBCG=mean(METRIC_VALUE))%>%
+  as.data.frame()
+
+colnames(AvgFishBCG)[2]<-"FishBCG"
+
+FishBugBCG<-merge(AvgBugBCG,AvgFishBCG,by="STA_SEQ",all=TRUE)
+FishBugBCG<-merge(FishBugBCG,sites,by="STA_SEQ")
