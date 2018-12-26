@@ -131,9 +131,9 @@ legend.onAdd = function (map) {
     div.innerHTML += '<i class="halfCircleLeft" style="background: black"></i>' +
         '<p> Fish Data</p>';
     div.innerHTML += '<h3>BCG Value</h3>';
-    div.innerHTML += '<i class = "p" style="background: blue"></i>  <p>1 or 2</p>';
-    div.innerHTML += '<i style="background: purple"></i>  <p>3 or 4 </p>';
-    div.innerHTML += '<i style="background: red"></i>  <p>5 or 6</p>';
+    div.innerHTML += '<i class = "p" style="background: blue"></i>  <p>1 or 2 (Minimal Stress)</p>';
+    div.innerHTML += '<i style="background: purple"></i>  <p>3 or 4 (Moderate Stress) </p>';
+    div.innerHTML += '<i style="background: red"></i>  <p>5 or 6 (Major Stress)</p>';
 
     // Return the Legend div containing the HTML content
     return div;
