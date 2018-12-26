@@ -18,7 +18,7 @@ L.tileLayer('http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-L.control.attribution({position: 'topright'}).addTo(map);
+L.control.attribution({position: 'bottomright'}).addTo(map);
 
 //in pixels, top left icon is drawn on lat,long
 var FishIcon = L.Icon.extend({
@@ -83,31 +83,6 @@ function getBugIcon(feature){
     return bugicon;
 }
 
-/*$.getJSON("data/BCGsites.geojson",function(data){
-    L.geoJson(data ,{
-        pointToLayer: function(feature,latlng){
-            var marker = L.marker(latlng,{icon: fishicon});
-            marker.bindPopup(feature.properties.Station_Name);
-            return marker;
-        }
-    }).addTo(map);
-});*/
-
-/*$.getJSON("data/BCGsites.geojson",function(data){
-    var marker = L.geoJson(data ,{
-        pointToLayer: function(feature,latlng){
-        return L.marker (latlng,{icon: getIcon(feature),opacity: 0.6})
-        },
-        onEachFeature: function (feature,marker) {
-            marker.bindPopup('<b>Stream: </b>' + feature.properties.Station_Name + '</br>' +
-                "<b>SID: </b>" + feature.properties.STA_SEQ + '</br>' +
-                "<b>SAMPLE:</b>"+feature.properties.SAMPLE+'</br>'+
-                "<b>BCG: </b>" +
-                feature.properties.AvgBCG);
-        }
-    }).addTo(map);
-});*/
-
 var controlLayers = L.control.layers().addTo(map);
 
 $.getJSON("data/FishBCGsites.geojson",function(fishdata){
@@ -142,62 +117,27 @@ $.getJSON("data/FBBCGsites.geojson",function(data) {
         }
     }).addTo(map);
 });
-/*var omsOptions = {nearbyDistance:1};
-var oms = new OverlappingMarkerSpiderfier(map,omsOptions);
 
+//add legend
+var legend = L.control({position: 'bottomright'});
 
-$.getJSON("data/BCGsites.geojson",function(data) {
-    L.geoJson(data  ,{
-        pointToLayer: function(feature,latlng){
-            return L.marker(latlng);
-        },
-        onEachFeature: function (feature, latlng) {
-            oms.addMarker(latlng);
-        }
-    }  ).addTo(map);
-});
+// Function that runs when legend is added to map
+legend.onAdd = function (map) {
 
-var popup = new L.Popup();
-oms.addListener('click', function(marker) {
-    popup.setContent('<b>Stream: </b>'+marker.feature.properties.Station_Name+'</br>'+
-        "<b>SID: </b>"+marker.feature.properties.STA_SEQ+'</br>'+
-        "<b>SAMPLE TYPE: </b>"+marker.feature.properties.SAMPLE+'</br>'+
-        "<b>BCG: </b>"+
-        marker.feature.properties.AvgBCG);
-    popup.setLatLng(marker.getLatLng());
-    map.openPopup(popup);
-});*/
+    // Create Div Element and Populate it with HTML
+    var div = L.DomUtil.create('div', 'legend');
+    div.innerHTML += '<i class="halfCircleRight" style="background: black"></i>' +
+        '<p>Macroinvertebrate Data</p>';
+    div.innerHTML += '<i class="halfCircleLeft" style="background: black"></i>' +
+        '<p> Fish Data</p>';
+    div.innerHTML += '<h3>BCG Value</h3>';
+    div.innerHTML += '<i class = "p" style="background: blue"></i>  <p>1 or 2</p>';
+    div.innerHTML += '<i style="background: purple"></i>  <p>3 or 4 </p>';
+    div.innerHTML += '<i style="background: red"></i>  <p>5 or 6</p>';
 
-// for (var i = 0; i < window.mapData.length; i ++) {
-//     var datum = window.mapData[i];
-//     var loc = new L.LatLng(datum.lat, datum.lon);
-//     var marker = new L.Marker(loc);
-//     marker.desc = datum.d;
-//     map.addLayer(marker);
-//     oms.addMarker(marker);  // <-- here
-// }
+    // Return the Legend div containing the HTML content
+    return div;
+};
 
-// load GeoJSON from an external file and display circle markers
-/*$.getJSON("BugBCGsites.geojson",function(data){
-    var marker = L.geoJson(data, {
-        pointToLayer: function(feature,latlng){
-            var markerStyle = {
-                fillColor:'#cccccc',
-                radius: 5,
-                color: "#000",
-                weight: 1,
-                opacity: 1,
-                fillOpacity: 0.9,
-                pane: 'top'
-            };
-            return L.circleMarker(latlng, markerStyle);
-        },
-        onEachFeature: function (feature,marker) {
-            marker.bindPopup('<b>Stream: </b>'+feature.properties.Station_Name+'</br>'+
-                "<b>SID: </b>"+feature.properties.STA_SEQ+'</br>'+
-                "<b>BCG: </b>"+
-                feature.properties.AvgBCG);
-        }
-    }).addTo(map);
-});*/
-
+// Add Legend to Map
+legend.addTo(map);

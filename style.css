@@ -17,11 +17,64 @@ h3 {
 }
 
 p {
-    margin: 0;
+    margin-top: 0.5px;
+    white-space: nowrap;
 }
 
+#deep{
+    float:left;
+    width:36px;
+    height:36px;
+}
+
+
 #map {
-    height: 100%;
+    height: 90%;
     width: 100%;
 }
 
+.legend {
+    line-height: 18px;
+    color: #333333;
+    font-family: 'Open Sans', Helvetica, sans-serif;
+    padding: 10px 30px;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 1;
+}
+
+.legend p {
+    font-size: 14px;
+    line-height: 20px;
+    margin: 0;
+}
+
+/*.legend .circle {
+    border-radius: 50%;
+    width: 14px;
+    height: 12px;
+    margin-top: 2px;
+}*/
+
+
+.legend .halfCircleRight{
+    height:18px;
+    width:10px;
+    border-radius: 0 90px 90px 0;
+}
+
+
+.legend .halfCircleLeft{
+    height:18px;
+    width:10px;
+    border-radius: 90px 0 0 90px;
+}
