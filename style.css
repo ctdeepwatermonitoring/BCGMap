@@ -1,8 +1,8 @@
-body {
+/*body {
     background: #20282e;
     font-family: 'Open Sans', sans-serif;
     font-weight: 400;
-}
+}*/
 
 /*h1 {*/
     /*font-family: 'Noto Serif TC', serif;*/
@@ -18,8 +18,16 @@ p {
     line-height: 1.7rem;
 }
 
-li {
+a {
+    color: aqua;
+}
+
+/*li {
     font-family: 'Noto Serif TC', serif;
+}*/
+
+a {
+
 }
 
 #map {
@@ -30,7 +38,7 @@ li {
 #legend {
     font-size: 1rem;
     border-radius: 5px;
-    max-width: 200px;
+    max-width: 300px;
     font-family: 'Open Sans', sans-serif;
 }
 
@@ -55,6 +63,18 @@ li {
     font-size: 1.5rem;
 }
 
+#deep {
+    float: left;
+    width:  75px;
+    height: 75px;
+    margin: 1px;
+}
+
+.customTooltip {
+    background: rgba(100, 100, 100, 0.9);
+    color: #ffffff;
+    font-size: 0.8vw;
+}
 
 /* Small devices (landscape phones, 576px and up) */
 @media (min-width: 576px) {}

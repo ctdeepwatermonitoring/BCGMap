@@ -111,26 +111,38 @@ function updateMap(sites) {
         const props = layer.feature.properties;
         console.log(attributeValue);
 
+        const BugLab = getLab(props["BugBCG"]);
+        const FishLab = getLab(props["FishBCG"]);
+
             layer.setStyle({
                 fillColor: getColor(props[attributeValue])
             });
 
 
+
         // assemble string sequence of info for tooltip (end line break with + operator)
         let tooltipInfo = `<b>${props["Station_Name"]}</b></br>
-            Bug BCG Value: ${(props["BugBCG"]).toLocaleString()}<br>
-            Fish BCG Value: ${(props["FishBCG"]).toLocaleString()}`;
+            Bug BCG Value: ${(BugLab).toLocaleString()}<br>
+            Fish BCG Value: ${(FishLab).toLocaleString()}`;
 
         // bind a tooltip to layer with county-specific information
         layer.bindTooltip(tooltipInfo, {
             // sticky property so tooltip follows the mouse
-            sticky: true
-        });
-
+            sticky: true,
+            className: 'customTooltip'
+        })
     });
 
 }
 
+
+function getLab(j) {
+    if (j ==0) {
+        return 'No data'
+    } else {
+        return j
+    }
+}
 
 // Get color of parameter
 function getColor(d) {
@@ -177,13 +189,16 @@ function addLegend() {
     const legend = $('#legend').html(`<h5>BCG Value</h5>`);
     legend.append(
         `<span style="background:#225ea8"></span>
-      <label>1 to 2</label><br>`);
+      <label>1 to 2 (Low Stress)</label><br>`);
     legend.append(
         `<span style="background:#41b6c4"></span>
-      <label>3 to 4</label><br>`);
+      <label>3 to 4 (Moderate Stress)</label><br>`);
     legend.append(
         `<span style="background:#a1dab4"></span>
-      <label>5 to 6</label><br>`);
+      <label>5 to 6 (High Stress)</label><br>`);
+    legend.append(
+        `<span style="background:#f0f0f0"></span>
+      <label>No data for selected taxa</label><br>`);
 }
 
 

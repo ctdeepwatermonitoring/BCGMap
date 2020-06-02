@@ -23,16 +23,16 @@
             <h1>Biological Condition Gradient (BCG) Data 2020 Assessments</h1>
         </div>
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary h4" data-toggle="modal" data-target="#exampleModal">
+        <button type="button" class="btn btn-primary h4" data-toggle="modal" data-target="#Modal">
             About
         </button>
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">BCG</h5>
+                        <h5 class="modal-title" id="ModalLabel">BCG Assessments</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -45,11 +45,14 @@
                             fish communities and macroinvertebrate communities and, starting in 2018, incorporated these
                             concepts into water quality assessments for the Integrated Water Quality Report.</p>
                         <p>The BCG provides more information about the condition of streams than our previous assessment
-                            methodology. The graph on the left shows typical stream health assessment on a pass/fail scale
-                            whereas the graph on the right shows how we are currently assessing streams using the BCG
-                            approach. The additional fine tuning allows us to identify minimally stressed healthy streams
+                            methodology. Historical stream health assessments relied on a pass/fail scale
+                            whereas the current methodology applies a gradient approach using the BCG indices.
+                            The additional fine tuning allows us to identify minimally stressed healthy streams
                             (e.g. BCG tiers 1 and 2). Rather than waiting for these streams to degrade to the point of
                             becoming impaired, CT DEEP is now taking steps to protect these healthy watersheds.</p>
+                        <p><a href="https://portal.ct.gov/DEEP/Water/Water-Quality/Water-Quality-305b-Report-to-Congress">
+                            Integrated water quality report</a>
+                        </p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -66,10 +69,16 @@
     </section>
 
     <footer class="row bg-dark text-white py-3">
-        <div class="col">
+        <div class=".col-12 .col-md-8 mx-1">
+            <a href="http://www.ct.gov/deep">
+                <img id="deep" src="https://portal.ct.gov/-/media/DEEP/about/DEEP-Circle-Logo.png?h=150&w=150&la=en&hash=131445C9D710F1436EF26A57E8F8287922A22BBF"></a>
+
+        </div>
+        <div class="col-6 col-md-4 mx-2">
             <ul class="list-unstyled">
+                <li>Connecticut Department of Energy and Environmental Protection </li>
                 <li>map authored by <a href="https://github.com/marybecker">Mary Becker</a> </li>
-                <li>last updated: 01 June 2020</li>
+                <li>last updated: 02 June 2020</li>
                 <li>data source: <a href="https://github.com/ctdeepwatermonitoring/BCGMap"> CT DEEP WATER MONITORING</a></li>
             </ul>
         </div>
@@ -81,7 +90,7 @@
 
 <div class="btn-group mt-3 text-white" data-toggle="buttons" id="ui">
     <label class="btn btn-default active text-white">
-        <input type="radio" name="BCG" class="radioBtn" value="BugBCG">Macroinvertebrates
+        <input type="radio" name="BCG" class="radioBtn" value="BugBCG" checked="">Macroinvertebrates
     </label>
     <label class="btn btn-default text-white">
         <input type="radio" name="BCG" class="radioBtn" value="FishBCG">Fish
