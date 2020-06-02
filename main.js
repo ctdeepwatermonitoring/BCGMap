@@ -1,144 +1,212 @@
-// initialize the map
-var lat= 41.55;
-var lng= -72.65;
-var zoom= 9;
-
-var map = L.map('map', {
-    zoomControl: true,
-    attributionControl: false
-});
-
-map.setView([lat, lng], zoom);
-map.createPane('top');
-map.getPane('top').style.zIndex=650;
-
-// load a tile layer base map
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-    subdomains: 'abcd',
-    maxZoom: 19
-}).addTo(map);
-
-L.control.attribution({position: 'bottomright'}).addTo(map);
-
-//in pixels, top left icon is drawn on lat,long
-var FishIcon = L.Icon.extend({
-    options: {
-        iconSize:     [7, 14],
-        iconAnchor:   [7, 7],
-        popupAnchor:  [-7, -7]
-    }
-});
-
-var BugIcon = L.Icon.extend({
-    options: {
-        iconSize:     [7, 14],
-        iconAnchor:   [0, 7],
-        popupAnchor:  [7, -1]
-    }
-});
-
-var siteIcon = L.icon({
-    iconUrl: 'sitecircle.png',
-    iconSize:   [14,14]
-});
-
-//iconAnchor [downward_pixels, rightward_pixels]
-//left  rect/circle is positioned: iconAnchor: [-0.5*icon_height,-0.5*icon_width]
-//right rect/circle is positioned: iconAnchor: [-0.5*icon_height,-icon_width]
-
-var redfishIcon = new FishIcon({iconUrl: 'redfishcircle.png'}),
-    bluefishIcon = new FishIcon({iconUrl: 'bluefishcircle.png'}),
-    purplefishIcon = new FishIcon({iconUrl: 'purplefishcircle.png'});
-
-
-var redbugIcon = new BugIcon({iconUrl: 'redbugcircle.png'}),
-    bluebugIcon = new BugIcon({iconUrl: 'bluebugcircle.png'}),
-    purplebugIcon = new BugIcon({iconUrl: 'purplebugcircle.png'});
-
-/*function getIcon(feature){
-    var icon;
-    if(feature.properties.AvgBCG <= 2 && feature.properties.SAMPLE == 'FISH') icon = bluefishIcon;
-    else if (feature.properties.AvgBCG <= 4 && feature.properties.SAMPLE == 'FISH') icon = purplefishIcon;
-    else if (feature.properties.AvgBCG <= 6 && feature.properties.SAMPLE == 'FISH') icon = redfishIcon;
-    else if (feature.properties.AvgBCG <= 2 && feature.properties.SAMPLE == 'BUG') icon = bluebugIcon;
-    else if (feature.properties.AvgBCG <= 4 && feature.properties.SAMPLE == 'BUG') icon = purplebugIcon;
-    else icon = redbugIcon;
-    return icon;
-}*/
-
-
-function getFishIcon(feature){
-    var fishicon;
-    if(feature.properties.AvgBCG <= 2) fishicon = bluefishIcon;
-    else if (feature.properties.AvgBCG <= 4) fishicon = purplefishIcon;
-    else fishicon = redfishIcon;
-    return fishicon;
-}
-
-function getBugIcon(feature){
-    var bugicon;
-    if(feature.properties.AvgBCG <= 2) bugicon = bluebugIcon;
-    else if (feature.properties.AvgBCG <= 4) bugicon = purplebugIcon;
-    else bugicon = redbugIcon;
-    return bugicon;
-}
-
-var controlLayers = L.control.layers().addTo(map);
-
-$.getJSON("data/FishBCGsites.geojson",function(fishdata){
-    var fishmarker = L.geoJson(fishdata ,{
-        pointToLayer: function(feature,latlng){
-            return L.marker (latlng,{icon: getFishIcon(feature),opacity: 0.9})
-        },
-    }).addTo(map);
-    controlLayers.addOverlay(fishmarker,'Fish');
-});
-
-
-$.getJSON("data/BugBCGsites.geojson",function(bugdata){
-    var bugmarker = L.geoJson(bugdata ,{
-        pointToLayer: function(feature,latlng){
-            return L.marker (latlng,{icon: getBugIcon(feature),opacity: 0.9})
-        },
-    }).addTo(map);
-    controlLayers.addOverlay(bugmarker,'Bug');
-});
-
-$.getJSON("data/FBBCGsites.geojson",function(data) {
-    var marker = L.geoJson(data, {
-        pointToLayer: function (feature, latlng) {
-            return L.marker(latlng, {pane: 'top', icon: siteIcon, opacity: 1})
-        },
-        onEachFeature: function (feature,marker) {
-            marker.bindPopup('<b>Stream: </b>' + feature.properties.Station_Name + '</br>' +
-                "<b>SID: </b>" + feature.properties.STA_SEQ + '</br>' +
-                "<b>Bug BCG: </b>" + feature.properties.BugBCG + '</br>' +
-                "<b>Fish BCG: </b>" + feature.properties.FishBCG + '</br>');
-        }
-    }).addTo(map);
-});
-
-//add legend
-var legend = L.control({position: 'bottomright'});
-
-// Function that runs when legend is added to map
-legend.onAdd = function (map) {
-
-    // Create Div Element and Populate it with HTML
-    var div = L.DomUtil.create('div', 'legend');
-    div.innerHTML += '<i class="halfCircleRight" style="background: black"></i>' +
-        '<p>Macroinvertebrate Data</p>';
-    div.innerHTML += '<i class="halfCircleLeft" style="background: black"></i>' +
-        '<p> Fish Data</p>';
-    div.innerHTML += '<h3>BCG Value</h3>';
-    div.innerHTML += '<i class = "p" style="background: blue"></i>  <p>1 or 2 (Minimal Stress)</p>';
-    div.innerHTML += '<i style="background: purple"></i>  <p>3 or 4 (Moderate Stress) </p>';
-    div.innerHTML += '<i style="background: red"></i>  <p>5 or 6 (Major Stress)</p>';
-
-    // Return the Legend div containing the HTML content
-    return div;
+// initial Leaflet map options
+const options = {
+    zoomSnap: .1,
+    zoomControl: false
 };
 
-// Add Legend to Map
-legend.addTo(map);
+// create Leaflet map and apply options
+const map = L.map('map',options);
+new L.control.zoom({position:"bottomright"}).addTo(map)
+
+// set global variables for map layer,
+// mapped attribute, attribute already normalized (percent)
+let attributeValue = "BugBCG";
+
+// create object to hold legend titles
+const labels = {
+    "BugBCG": "Macroinvertebrate BCG",
+    "FishBCG": "Fish BCG"
+};
+
+var Basin = $.getJSON("data/majorbasin.geojson", function (basin) {
+    // jQuery method uses AJAX request for the GeoJSON data
+    const mbasin = L.geoJson(basin,{
+        style:function style(feature) {
+            return {
+                fillColor: 'white',
+                weight: 1,
+                opacity: 1,
+                color: 'white',
+                //dashArray: '4',
+                fillOpacity: 0.7
+            };
+        }
+    }).addTo(map);
+
+    // fit the map's bounds and zoom level using the counties extent
+    map.fitBounds(mbasin.getBounds(), {
+        padding: [18, 18] // add padding around counties
+    });
+});
+
+var Sites = $.when(Basin).done(function () {
+    $.getJSON("data/FBBCGsites.geojson", function (data) {
+        // jQuery method uses AJAX request for the GeoJSON data
+        console.log(data);
+        // call draw map and send data as parameter
+        drawMap(data);
+    })
+});
+
+
+
+
+
+function drawMap(data) {
+    // create Leaflet data layer and add to map
+    const sites = L.geoJson(data, {
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng,);
+        },
+        style: function style(feature){
+            return{
+                radius: 8,
+                fillColor: "#ffffff",
+                color: "#000",
+                weight: 1,
+                opacity: 0.5,
+                fillOpacity: 0.7
+            };
+        },
+        // add hover/touch functionality to each feature layer
+        onEachFeature: function (feature, layer) {
+
+            // when mousing over a layer
+            layer.on('mouseover', function () {
+
+                // change the stroke color and bring that element to the front
+                layer.setStyle({
+                    color: '#ff6e00'
+                }).bringToFront();
+            });
+
+            // on mousing off layer
+            layer.on('mouseout', function () {
+
+                // reset the layer style to its original stroke color
+                layer.setStyle({
+                    color: '#20282e'
+                });
+            });
+        }
+    }).addTo(map);
+
+
+
+    updateMap(sites); // draw the map
+    addUi(sites);
+    addLegend();
+
+}
+
+function updateMap(sites) {
+    // logging sites to console here to
+    // verify the Leaflet layers object is not accessible
+    // and scoped within this function
+    console.log(sites);
+
+    // loop through each county layer to update the color and tooltip info
+    sites.eachLayer(function (layer) {
+
+        const props = layer.feature.properties;
+        console.log(attributeValue);
+
+            layer.setStyle({
+                fillColor: getColor(props[attributeValue])
+            });
+
+
+        // assemble string sequence of info for tooltip (end line break with + operator)
+        let tooltipInfo = `<b>${props["Station_Name"]}</b></br>
+            Bug BCG Value: ${(props["BugBCG"]).toLocaleString()}<br>
+            Fish BCG Value: ${(props["FishBCG"]).toLocaleString()}`;
+
+        // bind a tooltip to layer with county-specific information
+        layer.bindTooltip(tooltipInfo, {
+            // sticky property so tooltip follows the mouse
+            sticky: true
+        });
+
+    });
+
+}
+
+
+// Get color of parameter
+function getColor(d) {
+    // function accepts a single normalized data attribute value
+    // and uses a series of conditional statements to determine which
+    // which color value to return to return to the function caller
+        if (d >= 1 && d <= 2) {
+            return '#225ea8';
+        } else if (d > 2 && d <= 4) {
+            return '#41b6c4';
+        } else if (d >4 && d <= 6) {
+            return '#a1dab4';
+        } else {
+            return '#f0f0f0'
+        }
+
+}
+
+
+// Add legend to map
+function addLegend() {
+
+    // create a new Leaflet control object, and position it top left
+    const legendControl = L.control({ position: 'topleft' });
+
+    // when the legend is added to the map
+    legendControl.onAdd = function() {
+
+        // select a div element with an id attribute of legend
+        const legend = L.DomUtil.get('legend');
+
+        // disable scroll and click/touch on map when on legend
+        L.DomEvent.disableScrollPropagation(legend);
+        L.DomEvent.disableClickPropagation(legend);
+
+        // return the selection to the method
+        return legend;
+
+    };
+
+    // add the empty legend div to the map
+    legendControl.addTo(map);
+
+    const legend = $('#legend').html(`<h5>BCG Value</h5>`);
+    legend.append(
+        `<span style="background:#225ea8"></span>
+      <label>1 to 2</label><br>`);
+    legend.append(
+        `<span style="background:#41b6c4"></span>
+      <label>3 to 4</label><br>`);
+    legend.append(
+        `<span style="background:#a1dab4"></span>
+      <label>5 to 6</label><br>`);
+}
+
+
+function addUi(sites) {
+    // create the select control
+    var selectControl = L.control({ position: "topright" });
+
+    // when control is added
+    selectControl.onAdd = function() {
+        // get the element with id attribute of ui-controls
+        return L.DomUtil.get("ui");
+    };
+    // add the control to the map
+    selectControl.addTo(map);
+
+    $('input:radio[name=BCG]').change(function() {
+        // change event for currently selected value
+        attributeValue = this.value;
+
+        updateMap(sites);
+    });
+
+}
+
+
+
