@@ -1,10 +1,10 @@
-setwd("/Users/tbecker/Documents/Projects/GitHubProjects/BCGMap/data")
+setwd('~/Projects/ProgramDev/BCGMap')
 library(dplyr)
 library(rgdal)
-library(OpenStreetMap)
 
-BCG<-read.csv("FishBug_2018AssessmentData.csv",header=TRUE)
-sites<-read.csv("sitesDB.csv",header=TRUE)
+
+BCG<-read.csv("data/BCG_Bioassessments_2022_050522.csv",header=TRUE)
+sites<-read.csv("data/sitesDB_050522.csv",header=TRUE)
 
 
 AvgBCG<- BCG %>%
@@ -14,15 +14,27 @@ AvgBCG<- BCG %>%
 
 AvgBCG<- merge(AvgBCG,sites,by.x="STA_SEQ")
 
+s_sites <- unique(AvgBCG[c(1,5:7)])
+BugBCG <- AvgBCG[which(AvgBCG$SAMPLE=='BUG'), ]
+colnames(BugBCG)[3] <- 'BugBCG'
+FishBCG <- AvgBCG[which(AvgBCG$SAMPLE=='FISH'), ]
+colnames(FishBCG)[3] <- 'FishBCG'
+
+AvgBCG <- merge(s_sites, BugBCG[,c(1,3)], by="STA_SEQ", all.x=TRUE)
+AvgBCG <- merge(AvgBCG, FishBCG[,c(1,3)], by="STA_SEQ", all.x=TRUE)
+AvgBCG[is.na(AvgBCG)] <- 0
+
+
+
 #Make sure coordinates are numeric.  Create a SpatialPointsDataFrame
 AvgBCG$YLat  <- as.numeric(AvgBCG$YLat)
 AvgBCG$XLong  <- as.numeric(AvgBCG$XLong)
-AvgBCG.SP  <- SpatialPointsDataFrame(AvgBCG[,c(8,7)],
-                                        AvgBCG[,-c(8,7)])
+AvgBCG.SP  <- SpatialPointsDataFrame(AvgBCG[,c(4,3)],
+                                        AvgBCG[,-c(4,3)])
 proj4string(AvgBCG.SP) <- CRS("+proj=utm +zone=18 +datum=WGS84") 
 str(AvgBCG.SP) # Now is class SpatialPointsDataFrame
 #Write as geojson
-writeOGR(AvgBCG.SP,"BCGsites",layer="AvgBCG", driver='GeoJSON')
+writeOGR(AvgBCG.SP,"FBBCGsites",layer="AvgBCG", driver='GeoJSON')
 
 
 #####BUG ONLY#####################################
