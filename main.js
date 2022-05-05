@@ -40,7 +40,7 @@ var Basin = $.getJSON("data/majorbasin.geojson", function (basin) {
 });
 
 var Sites = $.when(Basin).done(function () {
-    $.getJSON("data/FBBCGsites.geojson", function (data) {
+    $.getJSON("data/FBBCGsites_050522.geojson", function (data) {
         // jQuery method uses AJAX request for the GeoJSON data
         console.log(data);
         // call draw map and send data as parameter
